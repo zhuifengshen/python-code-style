@@ -406,31 +406,20 @@ Lambda函数
                  def __init__(self, side):
                      self.side = side
 
-                 def __get_area(self):
+                 @property
+                 def area(self):
                      """Calculates the 'area' property."""
                      return self.side ** 2
 
-                 def ___get_area(self):
-                     """Indirect accessor for 'area' property."""
-                     return self.__get_area()
-
-                 def __set_area(self, area):
-                     """Sets the 'area' property."""
+                 @area.setter
+                 def area(self, area):
+                     "Sets the 'area' property."
                      self.side = math.sqrt(area)
-
-                 def ___set_area(self, area):
-                     """Indirect setter for 'area' property."""
-                     self._SetArea(area)
-
-                 area = property(___get_area, ___set_area,
-                                 doc="""Gets or sets the area of the square.""")
 
                  @property
                  def perimeter(self):
-                     return self.side * 4
-    
-    
-    (译者注: 老实说, 我觉得这段示例代码很不恰当, 有必要这么蛋疼吗?)
+                     return self.side * 4  
+  
     
 True/False的求值
 --------------------
