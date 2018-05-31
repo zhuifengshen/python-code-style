@@ -1,46 +1,181 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Python风格规范 &#8212; Python Code Style 1.0.0 文档</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/translations.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Python风格规范 &mdash; Python风格指南</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="Python语言规范" href="python_language_rules.html" />
+    <link rel="prev" title="Welcome to Python Code Style’s documentation!" href="index.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <div class="wy-grid-for-nav">
 
-  </head><body>
-  
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+          
+            <a href="index.html" class="icon icon-home"> Python Code Style
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Python风格规范</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">分号</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#line-length">行长度</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">括号</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#indentation">缩进</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">空行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">空格</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#shebang">Shebang</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comments">注释</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id11">类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id12">字符串</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sockets">文件和sockets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#todo">TODO注释</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id13">导入格式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id14">语句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id15">访问控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id16">命名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#main">Main</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="python_language_rules.html">Python语言规范</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Python Code Style</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Python风格规范</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/python_style_rules.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="python">
-<h1>Python风格规范<a class="headerlink" href="#python" title="永久链接至标题">¶</a></h1>
+<h1>Python风格规范</h1>
 <div class="section" id="id1">
-<h2>分号<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<h2>分号</h2>
 <div class="admonition tip">
 <p class="first admonition-title">小技巧</p>
 <p class="last">不要在行尾加分号, 也不要用分号将两条命令放在同一行.</p>
 </div>
 </div>
 <div class="section" id="line-length">
-<span id="id2"></span><h2>行长度<a class="headerlink" href="#line-length" title="永久链接至标题">¶</a></h2>
+<span id="id2"></span><h2>行长度</h2>
 <div class="admonition tip">
 <p class="first admonition-title">小技巧</p>
 <p class="last">每行不超过80个字符</p>
@@ -77,7 +212,7 @@
 <p>注意上面例子中的元素缩进; 你可以在本文的 <a class="reference internal" href="#indentation"><span class="std std-ref">缩进</span></a> 部分找到解释.</p>
 </div>
 <div class="section" id="id4">
-<h2>括号<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<h2>括号</h2>
 <div class="admonition tip">
 <p class="first admonition-title">小技巧</p>
 <p class="last">宁缺毋滥的使用括号</p>
@@ -104,7 +239,7 @@
 </div>
 </div>
 <div class="section" id="indentation">
-<span id="id5"></span><h2>缩进<a class="headerlink" href="#indentation" title="永久链接至标题">¶</a></h2>
+<span id="id5"></span><h2>缩进</h2>
 <div class="admonition tip">
 <p class="first admonition-title">小技巧</p>
 <p class="last">用4个空格来缩进代码</p>
@@ -153,7 +288,7 @@
 </div>
 </div>
 <div class="section" id="id6">
-<h2>空行<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<h2>空行</h2>
 <div class="admonition tip">
 <p class="first admonition-title">小技巧</p>
 <p class="last">顶级定义之间空两行, 方法定义之间空一行</p>
@@ -161,7 +296,7 @@
 <p>顶级定义之间空两行, 比如函数或者类定义. 方法定义, 类定义与第一个方法之间, 都应该空一行. 函数或方法中, 某些地方要是你觉得合适, 就空一行.</p>
 </div>
 <div class="section" id="id7">
-<h2>空格<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
+<h2>空格</h2>
 <div class="admonition tip">
 <p class="first admonition-title">小技巧</p>
 <p class="last">按照标准的排版规范来使用标点两边的空格</p>
@@ -234,7 +369,7 @@
 </div>
 </div>
 <div class="section" id="shebang">
-<h2>Shebang<a class="headerlink" href="#shebang" title="永久链接至标题">¶</a></h2>
+<h2>Shebang</h2>
 <div class="admonition tip">
 <p class="first admonition-title">小技巧</p>
 <p class="last">大部分.py文件不必以#!作为文件的开始. 根据 <a class="reference external" href="http://www.python.org/dev/peps/pep-0394/">PEP-394</a> , 程序的main文件应该以 #!/usr/bin/python2或者 #!/usr/bin/python3开始.</p>
@@ -243,7 +378,7 @@
 <p>#!先用于帮助内核找到Python解释器, 但是在导入模块时, 将会被忽略. 因此只有被直接执行的文件中才有必要加入#!.</p>
 </div>
 <div class="section" id="comments">
-<span id="id9"></span><h2>注释<a class="headerlink" href="#comments" title="永久链接至标题">¶</a></h2>
+<span id="id9"></span><h2>注释</h2>
 <div class="admonition tip">
 <p class="first admonition-title">小技巧</p>
 <p class="last">确保对模块, 函数, 方法和行内注释使用正确的风格</p>
@@ -352,7 +487,7 @@
 </div></blockquote>
 </div>
 <div class="section" id="id11">
-<h2>类<a class="headerlink" href="#id11" title="永久链接至标题">¶</a></h2>
+<h2>类</h2>
 <div class="admonition tip">
 <p class="first admonition-title">小技巧</p>
 <p class="last">如果一个类不继承自其它类, 就显式的从object继承. 嵌套类也一样.</p>
@@ -384,7 +519,7 @@
 <p>继承自 <code class="docutils literal notranslate"><span class="pre">object</span></code> 是为了使属性(properties)正常工作, 并且这样可以保护你的代码, 使其不受 <a class="reference external" href="http://www.python.org/dev/peps/pep-3000/">PEP-3000</a> 的一个特殊的潜在不兼容性影响. 这样做也定义了一些特殊的方法, 这些方法实现了对象的默认语义, 包括 <code class="docutils literal notranslate"><span class="pre">__new__,</span> <span class="pre">__init__,</span> <span class="pre">__delattr__,</span> <span class="pre">__getattribute__,</span> <span class="pre">__setattr__,</span> <span class="pre">__hash__,</span> <span class="pre">__repr__,</span> <span class="pre">and</span> <span class="pre">__str__</span></code> .</p>
 </div>
 <div class="section" id="id12">
-<h2>字符串<a class="headerlink" href="#id12" title="永久链接至标题">¶</a></h2>
+<h2>字符串</h2>
 <div class="admonition tip">
 <p class="first admonition-title">小技巧</p>
 <p class="last">即使参数都是字符串, 使用%操作符或者格式化方法格式化字符串. 不过也不能一概而论, 你需要在+和%之间好好判定.</p>
@@ -444,7 +579,7 @@
 </div>
 </div>
 <div class="section" id="sockets">
-<h2>文件和sockets<a class="headerlink" href="#sockets" title="永久链接至标题">¶</a></h2>
+<h2>文件和sockets</h2>
 <div class="admonition tip">
 <p class="first admonition-title">小技巧</p>
 <p class="last">在文件和sockets结束时, 显式的关闭它.</p>
@@ -477,7 +612,7 @@
 <p>Legacy AppEngine 中Python 2.5的代码如使用”with”语句, 需要添加 “from __future__ import with_statement”.</p>
 </div>
 <div class="section" id="todo">
-<h2>TODO注释<a class="headerlink" href="#todo" title="永久链接至标题">¶</a></h2>
+<h2>TODO注释</h2>
 <div class="admonition tip">
 <p class="first admonition-title">小技巧</p>
 <p class="last">为临时代码使用TODO注释, 它是一种短期解决方案. 不算完美, 但够好了.</p>
@@ -490,7 +625,7 @@
 <p>如果你的TODO是”将来做某事”的形式, 那么请确保你包含了一个指定的日期(“2009年11月解决”)或者一个特定的事件(“等到所有的客户都可以处理XML请求就移除这些代码”).</p>
 </div>
 <div class="section" id="id13">
-<h2>导入格式<a class="headerlink" href="#id13" title="永久链接至标题">¶</a></h2>
+<h2>导入格式</h2>
 <div class="admonition tip">
 <p class="first admonition-title">小技巧</p>
 <p class="last">每个导入应该独占一行</p>
@@ -518,7 +653,7 @@
 </div>
 </div>
 <div class="section" id="id14">
-<h2>语句<a class="headerlink" href="#id14" title="永久链接至标题">¶</a></h2>
+<h2>语句</h2>
 <div class="admonition tip">
 <p class="first admonition-title">小技巧</p>
 <p class="last">通常每个语句应该独占一行</p>
@@ -544,7 +679,7 @@
 </div>
 </div>
 <div class="section" id="id15">
-<h2>访问控制<a class="headerlink" href="#id15" title="永久链接至标题">¶</a></h2>
+<h2>访问控制</h2>
 <div class="admonition tip">
 <p class="first admonition-title">小技巧</p>
 <p>在Python中, 对于琐碎又不太重要的访问函数, 你应该直接使用公有变量来取代它们, 这样可以避免额外的函数调用开销. 当添加更多功能时, 你可以用属性(property)来保持语法的一致性.</p>
@@ -553,7 +688,7 @@
 <p>另一方面, 如果访问更复杂, 或者变量的访问开销很显著, 那么你应该使用像 <code class="docutils literal notranslate"><span class="pre">get_foo()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">set_foo()</span></code> 这样的函数调用. 如果之前的代码行为允许通过属性(property)访问 , 那么就不要将新的访问函数与属性绑定. 这样, 任何试图通过老方法访问变量的代码就没法运行, 使用者也就会意识到复杂性发生了变化.</p>
 </div>
 <div class="section" id="id16">
-<h2>命名<a class="headerlink" href="#id16" title="永久链接至标题">¶</a></h2>
+<h2>命名</h2>
 <div class="admonition tip">
 <p class="first admonition-title">小技巧</p>
 <p class="last">module_name, package_name, ClassName, method_name, ExceptionName, function_name, GLOBAL_VAR_NAME, instance_var_name, function_parameter_name, local_var_name.</p>
@@ -638,7 +773,7 @@
 </table>
 </div>
 <div class="section" id="main">
-<span id="id17"></span><h2>Main<a class="headerlink" href="#main" title="永久链接至标题">¶</a></h2>
+<span id="id17"></span><h2>Main</h2>
 <div class="admonition tip">
 <p class="first admonition-title">小技巧</p>
 <p class="last">即使是一个打算被用作脚本的文件, 也应该是可导入的. 并且简单的导入不应该导致这个脚本的主功能(main functionality)被执行, 这是一种副作用. 主功能应该放在一个main()函数中.</p>
@@ -656,78 +791,72 @@
 </div>
 
 
+           </div>
+           
           </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="python_language_rules.html" class="btn btn-neutral float-right" title="Python语言规范" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to Python Code Style’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Devin.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">內容目录</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Python风格规范</a><ul>
-<li><a class="reference internal" href="#id1">分号</a></li>
-<li><a class="reference internal" href="#line-length">行长度</a></li>
-<li><a class="reference internal" href="#id4">括号</a></li>
-<li><a class="reference internal" href="#indentation">缩进</a></li>
-<li><a class="reference internal" href="#id6">空行</a></li>
-<li><a class="reference internal" href="#id7">空格</a></li>
-<li><a class="reference internal" href="#shebang">Shebang</a></li>
-<li><a class="reference internal" href="#comments">注释</a></li>
-<li><a class="reference internal" href="#id11">类</a></li>
-<li><a class="reference internal" href="#id12">字符串</a></li>
-<li><a class="reference internal" href="#sockets">文件和sockets</a></li>
-<li><a class="reference internal" href="#todo">TODO注释</a></li>
-<li><a class="reference internal" href="#id13">导入格式</a></li>
-<li><a class="reference internal" href="#id14">语句</a></li>
-<li><a class="reference internal" href="#id15">访问控制</a></li>
-<li><a class="reference internal" href="#id16">命名</a></li>
-<li><a class="reference internal" href="#main">Main</a></li>
-</ul>
-</li>
-</ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>本页</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/python_style_rules.rst.txt"
-            rel="nofollow">显示源代码</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>快速搜索</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="转向" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2018, Devin.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
-      
-      |
-      <a href="_sources/python_style_rules.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
-    
-  </body>
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0.0',
+            LANGUAGE:'zh_CN',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
 </html>

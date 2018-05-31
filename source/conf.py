@@ -74,7 +74,29 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+# html_theme = 'alabaster'
+
+
+# on_rtd is whether we are on readthedocs.org
+import os
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+
+if not on_rtd:  # only import and set the theme if we're building docs locally
+    import sphinx_rtd_theme
+    html_theme = 'sphinx_rtd_theme'
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+
+# otherwise, readthedocs.org uses their theme by default, so no need to specify it
+
+html_title = u'Python风格指南'
+htmlhelp_basename = 'PythonCodeStyledoc'
+html_add_permalinks = None
+
+latex_engine = 'xelatex'
+file_insertion_enabled = False
+
+
+
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -101,28 +123,63 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'PythonCodeStyledoc'
+# htmlhelp_basename = 'PythonCodeStyledoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
 
-latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    #
-    # 'papersize': 'letterpaper',
+# latex_elements = {
+#     # The paper size ('letterpaper' or 'a4paper').
+#     #
+#     # 'papersize': 'letterpaper',
 
-    # The font size ('10pt', '11pt' or '12pt').
-    #
-    # 'pointsize': '10pt',
+#     # The font size ('10pt', '11pt' or '12pt').
+#     #
+#     # 'pointsize': '10pt',
 
-    # Additional stuff for the LaTeX preamble.
-    #
-    # 'preamble': '',
+#     # Additional stuff for the LaTeX preamble.
+#     #
+#     # 'preamble': '',
 
-    # Latex figure (float) alignment
-    #
-    # 'figure_align': 'htbp',
-}
+#     # Latex figure (float) alignment
+#     #
+#     # 'figure_align': 'htbp',
+# }
+
+
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+if on_rtd:    
+    latex_elements = {    
+        # The paper size ('letterpaper' or 'a4paper').    
+        #'papersize': 'letterpaper',    
+        # The font size ('10pt', '11pt' or '12pt').    
+        #'pointsize': '10pt',    
+        # Additional stuff for the LaTeX preamble.    
+        'preamble': r'''    
+        \hypersetup{unicode=true}    
+        \usepackage{CJKutf8}    
+        \DeclareUnicodeCharacter{00A0}{\nobreakspace}    
+        \DeclareUnicodeCharacter{2203}{\ensuremath{\exists}}    
+        \DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}    
+        \DeclareUnicodeCharacter{2286}{\ensuremath{\subseteq}}    
+        \DeclareUnicodeCharacter{2713}{x}    
+        \DeclareUnicodeCharacter{27FA}{\ensuremath{\Longleftrightarrow}}    
+        \DeclareUnicodeCharacter{221A}{\ensuremath{\sqrt{}}}    
+        \DeclareUnicodeCharacter{221B}{\ensuremath{\sqrt[3]{}}}    
+        \DeclareUnicodeCharacter{2295}{\ensuremath{\oplus}}    
+        \DeclareUnicodeCharacter{2297}{\ensuremath{\otimes}}    
+        \begin{CJK}{UTF8}{gbsn}    
+        \AtEndDocument{\end{CJK}}    ''',    
+    }
+else:    
+    latex_elements = {        
+        'papersize' : 'a4paper',        
+        'utf8extra' : '',        
+        'inputenc'  : '',        
+        'babel'     : r'''\usepackage[english]{babel}''',        
+        'preamble' : r'''        \usepackage{ctex}        ''',    
+    }  
+
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
