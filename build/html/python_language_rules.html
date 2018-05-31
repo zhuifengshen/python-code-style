@@ -1,0 +1,706 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Python语言规范 &#8212; Python Code Style 1.0.0 文档</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="python">
+<h1>Python语言规范<a class="headerlink" href="#python" title="永久链接至标题">¶</a></h1>
+<div class="section" id="lint">
+<h2>Lint<a class="headerlink" href="#lint" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">对你的代码运行pylint</p>
+</div>
+<dl class="docutils">
+<dt>定义:</dt>
+<dd>pylint是一个在Python源代码中查找bug的工具. 对于C和C++这样的不那么动态的(译者注: 原文是less dynamic)语言, 这些bug通常由编译器来捕获. 由于Python的动态特性, 有些警告可能不对. 不过伪告警应该很少.</dd>
+<dt>优点:</dt>
+<dd>可以捕获容易忽视的错误, 例如输入错误, 使用未赋值的变量等.</dd>
+<dt>缺点:</dt>
+<dd>pylint不完美. 要利用其优势, 我们有时侯需要: a) 围绕着它来写代码 b) 抑制其告警 c) 改进它, 或者d) 忽略它.</dd>
+<dt>结论:</dt>
+<dd><p class="first">确保对你的代码运行pylint.抑制不准确的警告,以便能够将其他警告暴露出来。</p>
+<p>你可以通过设置一个行注释来抑制告警. 例如:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">dict</span> <span class="o">=</span> <span class="s1">&#39;something awful&#39;</span>  <span class="c1"># Bad Idea... pylint: disable=redefined-builtin</span>
+</pre></div>
+</div>
+<p>pylint警告是以一个数字编号(如 <code class="docutils literal notranslate"><span class="pre">C0112</span></code> )和一个符号名(如 <code class="docutils literal notranslate"><span class="pre">empty-docstring</span></code> )来标识的. 在编写新代码或更新已有代码时对告警进行抑制, 推荐使用符号名来标识.</p>
+<p>如果警告的符号名不够见名知意，那么请对其增加一个详细解释。</p>
+<p>采用这种抑制方式的好处是我们可以轻松查找抑制并回顾它们.</p>
+<p>你可以使用命令 <code class="docutils literal notranslate"><span class="pre">pylint</span> <span class="pre">--list-msgs</span></code> 来获取pylint告警列表. 你可以使用命令 <code class="docutils literal notranslate"><span class="pre">pylint</span> <span class="pre">--help-msg=C6409</span></code> , 以获取关于特定消息的更多信息.</p>
+<p>相比较于之前使用的 <code class="docutils literal notranslate"><span class="pre">pylint:</span> <span class="pre">disable-msg</span></code> , 本文推荐使用 <code class="docutils literal notranslate"><span class="pre">pylint:</span> <span class="pre">disable</span></code> .</p>
+<p>要抑制”参数未使用”告警, 你可以用”_”作为参数标识符, 或者在参数名前加”unused_”. 遇到不能改变参数名的情况, 你可以通过在函数开头”提到”它们来消除告警. 例如:</p>
+<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">unused_b</span><span class="p">,</span> <span class="n">unused_c</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span>
+    <span class="k">return</span> <span class="n">a</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="id1">
+<h2>导入<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">仅对包和模块使用导入</p>
+</div>
+<dl class="docutils">
+<dt>定义:</dt>
+<dd>模块间共享代码的重用机制.</dd>
+<dt>优点:</dt>
+<dd>命名空间管理约定十分简单. 每个标识符的源都用一种一致的方式指示. x.Obj表示Obj对象定义在模块x中.</dd>
+<dt>缺点:</dt>
+<dd>模块名仍可能冲突. 有些模块名太长, 不太方便.</dd>
+<dt>结论:</dt>
+<dd><p class="first">使用 <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">x</span></code> 来导入包和模块.</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">x</span> <span class="pre">import</span> <span class="pre">y</span></code> , 其中x是包前缀, y是不带前缀的模块名.</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">x</span> <span class="pre">import</span> <span class="pre">y</span> <span class="pre">as</span> <span class="pre">z</span></code>, 如果两个要导入的模块都叫做y或者y太长了.</p>
+<p>例如, 模块 <code class="docutils literal notranslate"><span class="pre">sound.effects.echo</span></code> 可以用如下方式导入:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sound.effects</span> <span class="kn">import</span> <span class="n">echo</span>
+<span class="o">...</span>
+<span class="n">echo</span><span class="o">.</span><span class="n">EchoFilter</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">atten</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">导入时不要使用相对名称. 即使模块在同一个包中, 也要使用完整包名. 这能帮助你避免无意间导入一个包两次.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="id2">
+<h2>包<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">使用模块的全路径名来导入每个模块</p>
+</div>
+<dl class="docutils">
+<dt>优点:</dt>
+<dd>避免模块名冲突. 查找包更容易.</dd>
+<dt>缺点:</dt>
+<dd>部署代码变难, 因为你必须复制包层次.</dd>
+<dt>结论:</dt>
+<dd><p class="first">所有的新代码都应该用完整包名来导入每个模块.</p>
+<p>应该像下面这样导入:</p>
+<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reference in code with complete name.</span>
+<span class="kn">import</span> <span class="nn">sound.effects.echo</span>
+
+<span class="c1"># Reference in code with just module name (preferred).</span>
+<span class="kn">from</span> <span class="nn">sound.effects</span> <span class="kn">import</span> <span class="n">echo</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="id3">
+<h2>异常<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">允许使用异常, 但必须小心</p>
+</div>
+<dl class="docutils">
+<dt>定义:</dt>
+<dd>异常是一种跳出代码块的正常控制流来处理错误或者其它异常条件的方式.</dd>
+<dt>优点:</dt>
+<dd>正常操作代码的控制流不会和错误处理代码混在一起. 当某种条件发生时, 它也允许控制流跳过多个框架. 例如, 一步跳出N个嵌套的函数, 而不必继续执行错误的代码.</dd>
+<dt>缺点:</dt>
+<dd>可能会导致让人困惑的控制流. 调用库时容易错过错误情况.</dd>
+<dt>结论:</dt>
+<dd><p class="first">异常必须遵守特定条件:</p>
+<ol class="last arabic">
+<li><p class="first">像这样触发异常: <code class="docutils literal notranslate"><span class="pre">raise</span> <span class="pre">MyException(&quot;Error</span> <span class="pre">message&quot;)</span></code> 或者 <code class="docutils literal notranslate"><span class="pre">raise</span> <span class="pre">MyException</span></code> . 不要使用两个参数的形式( <code class="docutils literal notranslate"><span class="pre">raise</span> <span class="pre">MyException,</span> <span class="pre">&quot;Error</span> <span class="pre">message&quot;</span></code> )或者过时的字符串异常( <code class="docutils literal notranslate"><span class="pre">raise</span> <span class="pre">&quot;Error</span> <span class="pre">message&quot;</span></code> ).</p>
+</li>
+<li><p class="first">模块或包应该定义自己的特定域的异常基类, 这个基类应该从内建的Exception类继承. 模块的异常基类应该叫做”Error”.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Error</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">永远不要使用 <code class="docutils literal notranslate"><span class="pre">except:</span></code> 语句来捕获所有异常, 也不要捕获 <code class="docutils literal notranslate"><span class="pre">Exception</span></code> 或者 <code class="docutils literal notranslate"><span class="pre">StandardError</span></code> , 除非你打算重新触发该异常, 或者你已经在当前线程的最外层(记得还是要打印一条错误消息). 在异常这方面, Python非常宽容, <code class="docutils literal notranslate"><span class="pre">except:</span></code> 真的会捕获包括Python语法错误在内的任何错误. 使用 <code class="docutils literal notranslate"><span class="pre">except:</span></code> 很容易隐藏真正的bug.</p>
+</li>
+<li><p class="first">尽量减少try/except块中的代码量. try块的体积越大, 期望之外的异常就越容易被触发. 这种情况下, try/except块将隐藏真正的错误.</p>
+</li>
+<li><p class="first">使用finally子句来执行那些无论try块中有没有异常都应该被执行的代码. 这对于清理资源常常很有用, 例如关闭文件.</p>
+</li>
+<li><p class="first">当捕获异常时, 使用 <code class="docutils literal notranslate"><span class="pre">as</span></code> 而不要用逗号. 例如</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="n">Error</span>
+<span class="k">except</span> <span class="n">Error</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+</dd>
+</dl>
+</div>
+<div class="section" id="id4">
+<h2>全局变量<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">避免全局变量</p>
+</div>
+<dl class="docutils">
+<dt>定义:</dt>
+<dd>定义在模块级的变量.</dd>
+<dt>优点:</dt>
+<dd>偶尔有用.</dd>
+<dt>缺点:</dt>
+<dd>导入时可能改变模块行为, 因为导入模块时会对模块级变量赋值.</dd>
+<dt>结论:</dt>
+<dd><p class="first">避免使用全局变量, 用类变量来代替. 但也有一些例外:</p>
+<ol class="last arabic simple">
+<li>脚本的默认选项.</li>
+<li>模块级常量. 例如:　PI = 3.14159. 常量应该全大写, 用下划线连接.</li>
+<li>有时候用全局变量来缓存值或者作为函数返回值很有用.</li>
+<li>如果需要, 全局变量应该仅在模块内部可用, 并通过模块级的公共函数来访问.</li>
+</ol>
+</dd>
+</dl>
+</div>
+<div class="section" id="id5">
+<h2>嵌套/局部/内部类或函数<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">鼓励使用嵌套/本地/内部类或函数</p>
+</div>
+<dl class="docutils">
+<dt>定义:</dt>
+<dd>类可以定义在方法, 函数或者类中. 函数可以定义在方法或函数中. 封闭区间中定义的变量对嵌套函数是只读的.</dd>
+<dt>优点:</dt>
+<dd>允许定义仅用于有效范围的工具类和函数.</dd>
+<dt>缺点:</dt>
+<dd>嵌套类或局部类的实例不能序列化(pickled).</dd>
+<dt>结论:</dt>
+<dd>推荐使用.</dd>
+</dl>
+</div>
+<div class="section" id="list-comprehensions">
+<h2>列表推导(List Comprehensions)<a class="headerlink" href="#list-comprehensions" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">可以在简单情况下使用</p>
+</div>
+<dl class="docutils">
+<dt>定义:</dt>
+<dd>列表推导(list comprehensions)与生成器表达式(generator expression)提供了一种简洁高效的方式来创建列表和迭代器, 而不必借助map(), filter(), 或者lambda.</dd>
+<dt>优点:</dt>
+<dd>简单的列表推导可以比其它的列表创建方法更加清晰简单. 生成器表达式可以十分高效, 因为它们避免了创建整个列表.</dd>
+<dt>缺点:</dt>
+<dd>复杂的列表推导或者生成器表达式可能难以阅读.</dd>
+<dt>结论:</dt>
+<dd><p class="first">适用于简单情况. 每个部分应该单独置于一行: 映射表达式, for语句, 过滤器表达式. 禁止多重for语句或过滤器表达式. 复杂情况下还是使用循环.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Yes</span><span class="p">:</span>
+  <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+      <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+          <span class="k">if</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+              <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+  <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+      <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+          <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">y</span><span class="p">:</span>
+              <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+                  <span class="k">if</span> <span class="n">y</span> <span class="o">!=</span> <span class="n">z</span><span class="p">:</span>
+                      <span class="k">yield</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">complicated_transform</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+          <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">long_generator_function</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
+          <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span>
+
+  <span class="n">squares</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+
+  <span class="n">eat</span><span class="p">(</span><span class="n">jelly_bean</span> <span class="k">for</span> <span class="n">jelly_bean</span> <span class="ow">in</span> <span class="n">jelly_beans</span>
+      <span class="k">if</span> <span class="n">jelly_bean</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">No</span><span class="p">:</span>
+  <span class="n">result</span> <span class="o">=</span> <span class="p">[(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">]</span>
+
+  <span class="k">return</span> <span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+          <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+          <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+          <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">y</span>
+          <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+          <span class="k">if</span> <span class="n">y</span> <span class="o">!=</span> <span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="id6">
+<h2>默认迭代器和操作符<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">如果类型支持, 就使用默认迭代器和操作符. 比如列表, 字典及文件等.</p>
+</div>
+<dl class="docutils">
+<dt>定义:</dt>
+<dd>容器类型, 像字典和列表, 定义了默认的迭代器和关系测试操作符(in和not in)</dd>
+<dt>优点:</dt>
+<dd>默认操作符和迭代器简单高效, 它们直接表达了操作, 没有额外的方法调用. 使用默认操作符的函数是通用的. 它可以用于支持该操作的任何类型.</dd>
+<dt>缺点:</dt>
+<dd>你没法通过阅读方法名来区分对象的类型(例如, has_key()意味着字典). 不过这也是优点.</dd>
+<dt>结论:</dt>
+<dd><p class="first">如果类型支持, 就使用默认迭代器和操作符, 例如列表, 字典和文件. 内建类型也定义了迭代器方法. 优先考虑这些方法, 而不是那些返回列表的方法. 当然，这样遍历容器时，你将不能修改容器.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Yes</span><span class="p">:</span>  <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">adict</span><span class="p">:</span> <span class="o">...</span>
+      <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">adict</span><span class="p">:</span> <span class="o">...</span>
+      <span class="k">if</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">alist</span><span class="p">:</span> <span class="o">...</span>
+      <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">afile</span><span class="p">:</span> <span class="o">...</span>
+      <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">dict</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span> <span class="o">...</span>
+</pre></div>
+</div>
+<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">No</span><span class="p">:</span>   <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">adict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span> <span class="o">...</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">adict</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">key</span><span class="p">):</span> <span class="o">...</span>
+      <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">afile</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span> <span class="o">...</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="id7">
+<h2>生成器<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">按需使用生成器.</p>
+</div>
+<dl class="docutils">
+<dt>定义:</dt>
+<dd>所谓生成器函数, 就是每当它执行一次生成(yield)语句, 它就返回一个迭代器, 这个迭代器生成一个值. 生成值后, 生成器函数的运行状态将被挂起, 直到下一次生成.</dd>
+<dt>优点:</dt>
+<dd>简化代码, 因为每次调用时, 局部变量和控制流的状态都会被保存. 比起一次创建一系列值的函数, 生成器使用的内存更少.</dd>
+<dt>缺点:</dt>
+<dd>没有.</dd>
+<dt>结论:</dt>
+<dd><p class="first">鼓励使用. 注意在生成器函数的文档字符串中使用”Yields:”而不是”Returns:”.</p>
+<p class="last">(译者注: 参看 <a class="reference internal" href="python_style_rules.html#comments"><span class="std std-ref">注释</span></a> )</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="lambda">
+<h2>Lambda函数<a class="headerlink" href="#lambda" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">适用于单行函数</p>
+</div>
+<dl class="docutils">
+<dt>定义:</dt>
+<dd>与语句相反, lambda在一个表达式中定义匿名函数. 常用于为 <code class="docutils literal notranslate"><span class="pre">map()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">filter()</span></code> 之类的高阶函数定义回调函数或者操作符.</dd>
+<dt>优点:</dt>
+<dd>方便.</dd>
+<dt>缺点:</dt>
+<dd>比本地函数更难阅读和调试. 没有函数名意味着堆栈跟踪更难理解. 由于lambda函数通常只包含一个表达式, 因此其表达能力有限.</dd>
+<dt>结论:</dt>
+<dd><p class="first">适用于单行函数. 如果代码超过60-80个字符, 最好还是定义成常规(嵌套)函数.</p>
+<p class="last">对于常见的操作符，例如乘法操作符，使用 <code class="docutils literal notranslate"><span class="pre">operator</span></code> 模块中的函数以代替lambda函数. 例如, 推荐使用 <code class="docutils literal notranslate"><span class="pre">operator.mul</span></code> , 而不是 <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">x,</span> <span class="pre">y:</span> <span class="pre">x</span> <span class="pre">*</span> <span class="pre">y</span></code> .</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="id8">
+<h2>条件表达式<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">适用于单行函数</p>
+</div>
+<dl class="docutils">
+<dt>定义:</dt>
+<dd>条件表达式是对于if语句的一种更为简短的句法规则. 例如: <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">if</span> <span class="pre">cond</span> <span class="pre">else</span> <span class="pre">2</span></code> .</dd>
+<dt>优点:</dt>
+<dd>比if语句更加简短和方便.</dd>
+<dt>缺点:</dt>
+<dd>比if语句难于阅读. 如果表达式很长， 难于定位条件.</dd>
+<dt>结论:</dt>
+<dd>适用于单行函数. 在其他情况下，推荐使用完整的if语句.</dd>
+</dl>
+</div>
+<div class="section" id="id9">
+<h2>默认参数值<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">适用于大部分情况.</p>
+</div>
+<dl class="docutils">
+<dt>定义:</dt>
+<dd>你可以在函数参数列表的最后指定变量的值, 例如, <code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">foo(a,</span> <span class="pre">b</span> <span class="pre">=</span> <span class="pre">0):</span></code> . 如果调用foo时只带一个参数, 则b被设为0. 如果带两个参数, 则b的值等于第二个参数.</dd>
+<dt>优点:</dt>
+<dd>你经常会碰到一些使用大量默认值的函数, 但偶尔(比较少见)你想要覆盖这些默认值. 默认参数值提供了一种简单的方法来完成这件事, 你不需要为这些罕见的例外定义大量函数. 同时, Python也不支持重载方法和函数, 默认参数是一种”仿造”重载行为的简单方式.</dd>
+<dt>缺点:</dt>
+<dd>默认参数只在模块加载时求值一次. 如果参数是列表或字典之类的可变类型, 这可能会导致问题. 如果函数修改了对象(例如向列表追加项), 默认值就被修改了.</dd>
+<dt>结论:</dt>
+<dd><p class="first">鼓励使用, 不过有如下注意事项:</p>
+<p>不要在函数或方法定义中使用可变对象作为默认值.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Yes</span><span class="p">:</span> <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+         <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+             <span class="n">b</span> <span class="o">=</span> <span class="p">[]</span>
+</pre></div>
+</div>
+<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">No</span><span class="p">:</span>  <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="p">[]):</span>
+         <span class="o">...</span>
+<span class="n">No</span><span class="p">:</span>  <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()):</span>  <span class="c1"># The time the module was loaded???</span>
+         <span class="o">...</span>
+<span class="n">No</span><span class="p">:</span>  <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">FLAGS</span><span class="o">.</span><span class="n">my_thing</span><span class="p">):</span>  <span class="c1"># sys.argv has not yet been parsed...</span>
+         <span class="o">...</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="properties">
+<h2>属性(properties)<a class="headerlink" href="#properties" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">访问和设置数据成员时, 你通常会使用简单, 轻量级的访问和设置函数. 建议用属性（properties）来代替它们.</p>
+</div>
+<dl class="docutils">
+<dt>定义:</dt>
+<dd>一种用于包装方法调用的方式. 当运算量不大, 它是获取和设置属性(attribute)的标准方式.</dd>
+<dt>优点:</dt>
+<dd>通过消除简单的属性(attribute)访问时显式的get和set方法调用, 可读性提高了. 允许懒惰的计算. 用Pythonic的方式来维护类的接口. 就性能而言, 当直接访问变量是合理的, 添加访问方法就显得琐碎而无意义. 使用属性(properties)可以绕过这个问题. 将来也可以在不破坏接口的情况下将访问方法加上.</dd>
+<dt>缺点:</dt>
+<dd>属性(properties)是在get和set方法声明后指定, 这需要使用者在接下来的代码中注意: set和get是用于属性(properties)的(除了用 <code class="docutils literal notranslate"><span class="pre">&#64;property</span></code> 装饰器创建的只读属性).  必须继承自object类. 可能隐藏比如操作符重载之类的副作用. 继承时可能会让人困惑.</dd>
+<dt>结论:</dt>
+<dd><p class="first">你通常习惯于使用访问或设置方法来访问或设置数据, 它们简单而轻量. 不过我们建议你在新的代码中使用属性. 只读属性应该用 <code class="docutils literal notranslate"><span class="pre">&#64;property</span></code> <a class="reference external" href="http://google-styleguide.googlecode.com/svn/trunk/pyguide.html#Function_and_Method_Decorators">装饰器</a> 来创建.</p>
+<p>如果子类没有覆盖属性, 那么属性的继承可能看上去不明显. 因此使用者必须确保访问方法间接被调用, 以保证子类中的重载方法被属性调用(使用模板方法设计模式).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Yes</span><span class="p">:</span> <span class="kn">import</span> <span class="nn">math</span>
+
+     <span class="k">class</span> <span class="nc">Square</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+         <span class="sd">&quot;&quot;&quot;A square with two properties: a writable area and a read-only perimeter.</span>
+
+<span class="sd">         To use:</span>
+<span class="sd">         &gt;&gt;&gt; sq = Square(3)</span>
+<span class="sd">         &gt;&gt;&gt; sq.area</span>
+<span class="sd">         9</span>
+<span class="sd">         &gt;&gt;&gt; sq.perimeter</span>
+<span class="sd">         12</span>
+<span class="sd">         &gt;&gt;&gt; sq.area = 16</span>
+<span class="sd">         &gt;&gt;&gt; sq.side</span>
+<span class="sd">         4</span>
+<span class="sd">         &gt;&gt;&gt; sq.perimeter</span>
+<span class="sd">         16</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+
+         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">side</span><span class="p">):</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">side</span> <span class="o">=</span> <span class="n">side</span>
+
+         <span class="k">def</span> <span class="nf">__get_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+             <span class="sd">&quot;&quot;&quot;Calculates the &#39;area&#39; property.&quot;&quot;&quot;</span>
+             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">side</span> <span class="o">**</span> <span class="mi">2</span>
+
+         <span class="k">def</span> <span class="nf">___get_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+             <span class="sd">&quot;&quot;&quot;Indirect accessor for &#39;area&#39; property.&quot;&quot;&quot;</span>
+             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_area</span><span class="p">()</span>
+
+         <span class="k">def</span> <span class="nf">__set_area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">area</span><span class="p">):</span>
+             <span class="sd">&quot;&quot;&quot;Sets the &#39;area&#39; property.&quot;&quot;&quot;</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">side</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">area</span><span class="p">)</span>
+
+         <span class="k">def</span> <span class="nf">___set_area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">area</span><span class="p">):</span>
+             <span class="sd">&quot;&quot;&quot;Indirect setter for &#39;area&#39; property.&quot;&quot;&quot;</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">_SetArea</span><span class="p">(</span><span class="n">area</span><span class="p">)</span>
+
+         <span class="n">area</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">___get_area</span><span class="p">,</span> <span class="n">___set_area</span><span class="p">,</span>
+                         <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Gets or sets the area of the square.&quot;&quot;&quot;</span><span class="p">)</span>
+
+         <span class="nd">@property</span>
+         <span class="k">def</span> <span class="nf">perimeter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">side</span> <span class="o">*</span> <span class="mi">4</span>
+</pre></div>
+</div>
+<p class="last">(译者注: 老实说, 我觉得这段示例代码很不恰当, 有必要这么蛋疼吗?)</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="true-false">
+<h2>True/False的求值<a class="headerlink" href="#true-false" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">尽可能使用隐式false</p>
+</div>
+<dl class="docutils">
+<dt>定义:</dt>
+<dd>Python在布尔上下文中会将某些值求值为false. 按简单的直觉来讲, 就是所有的”空”值都被认为是false. 因此0， None, [], {}, “” 都被认为是false.</dd>
+<dt>优点:</dt>
+<dd>使用Python布尔值的条件语句更易读也更不易犯错. 大部分情况下, 也更快.</dd>
+<dt>缺点:</dt>
+<dd>对C/C++开发人员来说, 可能看起来有点怪.</dd>
+<dt>结论:</dt>
+<dd><p class="first">尽可能使用隐式的false, 例如: 使用 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">foo:</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">foo</span> <span class="pre">!=</span> <span class="pre">[]:</span></code> . 不过还是有一些注意事项需要你铭记在心:</p>
+<ol class="last arabic">
+<li><p class="first">永远不要用==或者!=来比较单件, 比如None. 使用is或者is not.</p>
+</li>
+<li><p class="first">注意: 当你写下 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">x:</span></code> 时, 你其实表示的是 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">x</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">None</span></code> . 例如: 当你要测试一个默认值是None的变量或参数是否被设为其它值. 这个值在布尔语义下可能是false!</p>
+</li>
+<li><p class="first">永远不要用==将一个布尔量与false相比较. 使用 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">not</span> <span class="pre">x:</span></code> 代替. 如果你需要区分false和None, 你应该用像 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">not</span> <span class="pre">x</span> <span class="pre">and</span> <span class="pre">x</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">None:</span></code> 这样的语句.</p>
+</li>
+<li><p class="first">对于序列(字符串, 列表, 元组), 要注意空序列是false. 因此 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">not</span> <span class="pre">seq:</span></code> 或者 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">seq:</span></code> 比 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">len(seq):</span></code> 或 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">not</span> <span class="pre">len(seq):</span></code> 要更好.</p>
+</li>
+<li><p class="first">处理整数时, 使用隐式false可能会得不偿失(即不小心将None当做0来处理). 你可以将一个已知是整型(且不是len()的返回结果)的值与0比较.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Yes</span><span class="p">:</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">users</span><span class="p">:</span>
+         <span class="k">print</span> <span class="s1">&#39;no users&#39;</span>
+
+     <span class="k">if</span> <span class="n">foo</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">handle_zero</span><span class="p">()</span>
+
+     <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">handle_multiple_of_ten</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">No</span><span class="p">:</span>  <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+         <span class="k">print</span> <span class="s1">&#39;no users&#39;</span>
+
+     <span class="k">if</span> <span class="n">foo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">foo</span><span class="p">:</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">handle_zero</span><span class="p">()</span>
+
+     <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">10</span><span class="p">:</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">handle_multiple_of_ten</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">注意‘0’(字符串)会被当做true.</p>
+</li>
+</ol>
+</dd>
+</dl>
+</div>
+<div class="section" id="id11">
+<h2>过时的语言特性<a class="headerlink" href="#id11" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">尽可能使用字符串方法取代字符串模块. 使用函数调用语法取代apply(). 使用列表推导, for循环取代filter(), map()以及reduce().</p>
+</div>
+<dl class="docutils">
+<dt>定义:</dt>
+<dd>当前版本的Python提供了大家通常更喜欢的替代品.</dd>
+<dt>结论:</dt>
+<dd><p class="first">我们不使用不支持这些特性的Python版本, 所以没理由不用新的方式.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Yes</span><span class="p">:</span> <span class="n">words</span> <span class="o">=</span> <span class="n">foo</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+
+     <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">my_list</span> <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">5</span><span class="p">]</span>
+
+     <span class="nb">map</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>    <span class="c1"># Ok. No inlined lambda expression.</span>
+
+     <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">No</span><span class="p">:</span>  <span class="n">words</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">)</span>
+
+     <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">5</span><span class="p">,</span> <span class="n">my_list</span><span class="p">))</span>
+
+     <span class="nb">apply</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="lexical-scoping">
+<h2>词法作用域(Lexical Scoping)<a class="headerlink" href="#lexical-scoping" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">推荐使用</p>
+</div>
+<dl class="docutils">
+<dt>定义:</dt>
+<dd><p class="first">嵌套的Python函数可以引用外层函数中定义的变量, 但是不能够对它们赋值. 变量绑定的解析是使用词法作用域, 也就是基于静态的程序文本. 对一个块中的某个名称的任何赋值都会导致Python将对该名称的全部引用当做局部变量, 甚至是赋值前的处理. 如果碰到global声明, 该名称就会被视作全局变量.</p>
+<p>一个使用这个特性的例子:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_adder</span><span class="p">(</span><span class="n">summand1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a function that adds numbers to a given number.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">adder</span><span class="p">(</span><span class="n">summand2</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">summand1</span> <span class="o">+</span> <span class="n">summand2</span>
+
+    <span class="k">return</span> <span class="n">adder</span>
+</pre></div>
+</div>
+<p class="last">(译者注: 这个例子有点诡异, 你应该这样使用这个函数: <code class="docutils literal notranslate"><span class="pre">sum</span> <span class="pre">=</span> <span class="pre">get_adder(summand1)(summand2)</span></code> )</p>
+</dd>
+<dt>优点:</dt>
+<dd>通常可以带来更加清晰, 优雅的代码. 尤其会让有经验的Lisp和Scheme(还有Haskell, ML等)程序员感到欣慰.</dd>
+<dt>缺点:</dt>
+<dd><p class="first">可能导致让人迷惑的bug. 例如下面这个依据 <a class="reference external" href="http://www.python.org/dev/peps/pep-0227/">PEP-0227</a> 的例子:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">i</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">bar</span><span class="p">():</span>
+        <span class="k">print</span> <span class="n">i</span><span class="p">,</span>
+    <span class="c1"># ...</span>
+    <span class="c1"># A bunch of code here</span>
+    <span class="c1"># ...</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>  <span class="c1"># Ah, i *is* local to Foo, so this is what Bar sees</span>
+        <span class="k">print</span> <span class="n">i</span><span class="p">,</span>
+    <span class="n">bar</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>因此 <code class="docutils literal notranslate"><span class="pre">foo([1,</span> <span class="pre">2,</span> <span class="pre">3])</span></code> 会打印 <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">2</span> <span class="pre">3</span> <span class="pre">3</span></code> , 不是 <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">2</span> <span class="pre">3</span> <span class="pre">4</span></code> .</p>
+<p class="last">(译者注: x是一个列表, for循环其实是将x中的值依次赋给i.这样对i的赋值就隐式的发生了, 整个foo函数体中的i都会被当做局部变量, 包括bar()中的那个. 这一点与C++之类的静态语言还是有很大差别的.)</p>
+</dd>
+<dt>结论:</dt>
+<dd>鼓励使用.</dd>
+</dl>
+</div>
+<div class="section" id="id12">
+<h2>函数与方法装饰器<a class="headerlink" href="#id12" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">如果好处很显然, 就明智而谨慎的使用装饰器</p>
+</div>
+<dl class="docutils">
+<dt>定义:</dt>
+<dd><p class="first"><a class="reference external" href="https://docs.python.org/release/2.4.3/whatsnew/node6.html">用于函数及方法的装饰器</a> (也就是&#64;标记). 最常见的装饰器是&#64;classmethod 和&#64;staticmethod, 用于将常规函数转换成类方法或静态方法. 不过, 装饰器语法也允许用户自定义装饰器. 特别地, 对于某个函数 <code class="docutils literal notranslate"><span class="pre">my_decorator</span></code> , 下面的两段代码是等效的:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+   <span class="nd">@my_decorator</span>
+   <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="c1"># method body ...</span>
+</pre></div>
+</div>
+<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># method body ...</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="n">my_decorator</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>优点:</dt>
+<dd>优雅的在函数上指定一些转换. 该转换可能减少一些重复代码, 保持已有函数不变(enforce invariants), 等.</dd>
+<dt>缺点:</dt>
+<dd>装饰器可以在函数的参数或返回值上执行任何操作, 这可能导致让人惊异的隐藏行为. 而且, 装饰器在导入时执行. 从装饰器代码的失败中恢复更加不可能.</dd>
+<dt>结论:</dt>
+<dd><p class="first">如果好处很显然, 就明智而谨慎的使用装饰器. 装饰器应该遵守和函数一样的导入和命名规则. 装饰器的python文档应该清晰的说明该函数是一个装饰器. 请为装饰器编写单元测试.</p>
+<p>避免装饰器自身对外界的依赖(即不要依赖于文件, socket, 数据库连接等), 因为装饰器运行时这些资源可能不可用(由 <code class="docutils literal notranslate"><span class="pre">pydoc</span></code> 或其它工具导入). 应该保证一个用有效参数调用的装饰器在所有情况下都是成功的.</p>
+<p class="last">装饰器是一种特殊形式的”顶级代码”. 参考后面关于 <a class="reference internal" href="python_style_rules.html#main"><span class="std std-ref">Main</span></a> 的话题.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="id14">
+<h2>线程<a class="headerlink" href="#id14" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">不要依赖内建类型的原子性.</p>
+</div>
+<p>虽然Python的内建类型例如字典看上去拥有原子操作, 但是在某些情形下它们仍然不是原子的(即: 如果__hash__或__eq__被实现为Python方法)且它们的原子性是靠不住的. 你也不能指望原子变量赋值(因为这个反过来依赖字典).</p>
+<p>优先使用Queue模块的 <code class="docutils literal notranslate"><span class="pre">Queue</span></code> 数据类型作为线程间的数据通信方式. 另外, 使用threading模块及其锁原语(locking primitives). 了解条件变量的合适使用方式, 这样你就可以使用 <code class="docutils literal notranslate"><span class="pre">threading.Condition</span></code> 来取代低级别的锁了.</p>
+</div>
+<div class="section" id="id15">
+<h2>威力过大的特性<a class="headerlink" href="#id15" title="永久链接至标题">¶</a></h2>
+<div class="admonition tip">
+<p class="first admonition-title">小技巧</p>
+<p class="last">避免使用这些特性</p>
+</div>
+<dl class="docutils">
+<dt>定义:</dt>
+<dd>Python是一种异常灵活的语言, 它为你提供了很多花哨的特性, 诸如元类(metaclasses), 字节码访问, 任意编译(on-the-fly compilation), 动态继承, 对象父类重定义(object reparenting), 导入黑客(import hacks), 反射, 系统内修改(modification of system internals), 等等.</dd>
+<dt>优点:</dt>
+<dd>强大的语言特性, 能让你的代码更紧凑.</dd>
+<dt>缺点:</dt>
+<dd>使用这些很”酷”的特性十分诱人, 但不是绝对必要. 使用奇技淫巧的代码将更加难以阅读和调试. 开始可能还好(对原作者而言), 但当你回顾代码, 它们可能会比那些稍长一点但是很直接的代码更加难以理解.</dd>
+<dt>结论:</dt>
+<dd>在你的代码中避免这些特性.</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Python语言规范</a><ul>
+<li><a class="reference internal" href="#lint">Lint</a></li>
+<li><a class="reference internal" href="#id1">导入</a></li>
+<li><a class="reference internal" href="#id2">包</a></li>
+<li><a class="reference internal" href="#id3">异常</a></li>
+<li><a class="reference internal" href="#id4">全局变量</a></li>
+<li><a class="reference internal" href="#id5">嵌套/局部/内部类或函数</a></li>
+<li><a class="reference internal" href="#list-comprehensions">列表推导(List Comprehensions)</a></li>
+<li><a class="reference internal" href="#id6">默认迭代器和操作符</a></li>
+<li><a class="reference internal" href="#id7">生成器</a></li>
+<li><a class="reference internal" href="#lambda">Lambda函数</a></li>
+<li><a class="reference internal" href="#id8">条件表达式</a></li>
+<li><a class="reference internal" href="#id9">默认参数值</a></li>
+<li><a class="reference internal" href="#properties">属性(properties)</a></li>
+<li><a class="reference internal" href="#true-false">True/False的求值</a></li>
+<li><a class="reference internal" href="#id11">过时的语言特性</a></li>
+<li><a class="reference internal" href="#lexical-scoping">词法作用域(Lexical Scoping)</a></li>
+<li><a class="reference internal" href="#id12">函数与方法装饰器</a></li>
+<li><a class="reference internal" href="#id14">线程</a></li>
+<li><a class="reference internal" href="#id15">威力过大的特性</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/python_language_rules.rst.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="转向" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Devin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/python_language_rules.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
